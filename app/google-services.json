@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "745607635638",
+    "project_id": "calorease-dfbe7",
+    "storage_bucket": "calorease-dfbe7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745607635638:android:5284e9e581ecc251003c17",
+        "android_client_info": {
+          "package_name": "com.example.calorease"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArGXE5uoPaa2V2nQnMaHMBGj8Q_6DoD5o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
