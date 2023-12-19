@@ -1,8 +1,11 @@
 package com.example.calorease.presentation.bottom_menu
 
 import android.Manifest
+import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +14,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,10 +24,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.example.calorease.R
+import com.example.calorease.data.request.PredictionRequest
 import com.example.calorease.data.response.PredictionResponse
 import com.example.calorease.data.response.UploadResponse
 import com.example.calorease.data.retrofit.ApiConfig
 import com.example.calorease.databinding.FragmentCameraBinding
+import com.example.calorease.presentation.popup.BottomPopup
 import com.example.calorease.utils.SessionManager
 import com.example.calorease.utils.getImageUri
 import com.example.calorease.utils.reduceFileImage
@@ -41,7 +48,8 @@ class CameraFragment : Fragment() {
     private lateinit var binding: FragmentCameraBinding
     private var currentImageUri: Uri? = null
     private lateinit var sessionManager: SessionManager
-    private var imagePath: String? = null
+    private var isFinishUpload: Boolean = false
+    private lateinit var bottomPopup: BottomPopup
 
     private val requestPermissionLauncher =
         registerForActivityResult(
@@ -80,13 +88,44 @@ class CameraFragment : Fragment() {
             requestPermissionLauncher.launch(REQUIRED_PERMISSION)
         }
 
-        binding.galleryButton.setOnClickListener { startGallery() }
-        binding.cameraButton.setOnClickListener { startCamera() }
+        binding.previewImageView.setOnClickListener {
+            showImageDialog()
+        }
+//        binding.galleryButton.setOnClickListener { startGallery() }
+//        binding.cameraButton.setOnClickListener { startCamera() }
         binding.uploadButton.setOnClickListener {
             uploadImage()
+//            if (isFinishUpload){
+                predictImage()
+                bottomPopup.show(parentFragmentManager, "tes")
+//            }
         }
-        binding.predictButton.setOnClickListener{ predictImage() }
 
+        bottomPopup = BottomPopup()
+
+    }
+
+    private fun showImageDialog(){
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.layout_pop_up_cam)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCanceledOnTouchOutside(true)
+
+        val btnGallery: Button = dialog.findViewById(R.id.gallery_button_popup)
+        val btnCamera: Button = dialog.findViewById(R.id.camera_button_popup)
+
+        btnGallery.setOnClickListener {
+            startGallery()
+            dialog.hide()
+        }
+        btnCamera.setOnClickListener {
+            startCamera()
+            dialog.hide()
+        }
+
+        dialog.show()
     }
 
     private fun startGallery() {
@@ -145,37 +184,48 @@ class CameraFragment : Fragment() {
                     val successResponse = apiService.uploadImage(multipartBody)
                     showToast(successResponse.status.message)
                     sessionManager.savePredictionImage(successResponse.data.imagePath)
-                    showToast(successResponse.data.imagePath)
+//                    showToast(successResponse.data.imagePath)
                     showLoading(false)
+
+                    isFinishUpload = true
                 }
                 catch (e:Exception) {
-//                    val errorBody = e.message.toString()
-//                    val errorResponse = Gson().fromJson(errorBody, UploadResponse::class.java)
-//                    showToast(errorResponse.status.message)
-//                    showLoading(false)
+                    val errorBody = e.message.toString()
+                    showToast(errorBody)
+                    showLoading(false)
                 }
             }
 
         } ?: showToast(getString(R.string.empty_image_warning))
+
 //        val intent = Intent(context, MainActivity::class.java)
 //        startActivity(intent)
     }
 
     private fun predictImage(){
-        val client = ApiConfig.getApiService().predictionImage( "gs://imagestoragedatabase/20231217_2328242189283371457962105.jpg")
+        val client = ApiConfig.getApiService().predictionImage( PredictionRequest("${sessionManager.fetchPredictionImage()}"))
 //        showToast(sessionManager.fetchPredictionImage().toString())
         client.enqueue(object : Callback<PredictionResponse> {
             override fun onResponse(
                 call: Call<PredictionResponse>,
                 response: Response<PredictionResponse>
             ) {
-                showToast(response.body()?.status?.message.toString())
+                showToast(response.body()?.data?.prediction!![0].nama)
+                val foodName = response.body()?.data?.prediction!![0].nama
+                val bundle = Bundle()
+                bundle.putString("food_name", foodName)
+                val newFragment = BottomPopup()
+                newFragment.arguments = bundle
+
+
             }
 
             override fun onFailure(call: Call<PredictionResponse>, t: Throwable) {
                 showToast(t.message.toString())
             }
         })
+
+
     }
 
     private fun showLoading(isLoading: Boolean) {

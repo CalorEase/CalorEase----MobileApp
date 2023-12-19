@@ -21,7 +21,7 @@ import java.util.Date
 import java.util.Locale
 
 private const val FILENAME_FORMAT = "yyyyMMdd_HHmmss"
-private const val MAXIMAL_SIZE = 1000000
+private const val MAXIMAL_SIZE = 200000
 private val timeStamp: String = SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(Date())
 
 fun getImageUri(context: Context): Uri {
@@ -68,6 +68,7 @@ fun uriToFile(imageUri: Uri, context: Context): File {
     return myFile
 }
 
+@RequiresApi(Build.VERSION_CODES.Q)
 fun File.reduceFileImage(): File {
     val file = this
     val bitmap = BitmapFactory.decodeFile(file.path).getRotatedBitmap(file)

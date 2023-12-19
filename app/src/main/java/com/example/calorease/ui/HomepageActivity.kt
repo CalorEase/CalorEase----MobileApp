@@ -1,12 +1,18 @@
 package com.example.calorease.ui
 
 import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.calorease.R
 import com.example.calorease.databinding.ActivityHomepageBinding
+import com.example.calorease.presentation.bottom_menu.AddImageActivty
 import com.example.calorease.presentation.bottom_menu.CameraFragment
 import com.example.calorease.presentation.bottom_menu.HomeFragment
 import com.example.calorease.presentation.bottom_menu.ProfileFragment
@@ -27,7 +33,22 @@ class HomepageActivity : AppCompatActivity() {
 
     private var currentImageUri: Uri? = null
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                Toast.makeText(this, "Permission request granted", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "Permission request denied", Toast.LENGTH_LONG).show()
+            }
+        }
 
+    private fun allPermissionsGranted() =
+        ContextCompat.checkSelfPermission(
+            this,
+            REQUIRED_PERMISSION
+        ) == PackageManager.PERMISSION_GRANTED
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomepageBinding.inflate(layoutInflater)
@@ -43,6 +64,9 @@ class HomepageActivity : AppCompatActivity() {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
+        if (!allPermissionsGranted()) {
+            requestPermissionLauncher.launch(REQUIRED_PERMISSION)
+        }
 
         val auth = Firebase.auth
         val user = auth.currentUser
@@ -68,6 +92,7 @@ class HomepageActivity : AppCompatActivity() {
                     true
 //                    val intent = Intent(this@HomepageActivity, AddImageActivty::class.java)
 //                    startActivity(intent)
+//                    true
                 }
                 R.id.profile -> {
                     setFragment(ProfileFragment())
