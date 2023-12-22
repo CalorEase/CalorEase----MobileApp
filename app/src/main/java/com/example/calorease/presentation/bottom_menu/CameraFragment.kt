@@ -51,6 +51,9 @@ class CameraFragment : Fragment() {
     private var isFinishUpload: Boolean = false
     private lateinit var bottomPopup: BottomPopup
 
+    private lateinit var foodAmount: String
+    private lateinit var foodCalorie: String
+
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -96,8 +99,8 @@ class CameraFragment : Fragment() {
         binding.uploadButton.setOnClickListener {
             uploadImage()
 //            if (isFinishUpload){
-                predictImage()
-                bottomPopup.show(parentFragmentManager, "tes")
+////                predictImage()
+//                bottomPopup.show(parentFragmentManager, "tes")
 //            }
         }
 
@@ -177,6 +180,7 @@ class CameraFragment : Fragment() {
                 imageFile?.name,
                 requestImageFile!!
             )
+            Log.d("badut", imageFile.toString())
 
             lifecycleScope.launch {
                 try {
@@ -184,10 +188,18 @@ class CameraFragment : Fragment() {
                     val successResponse = apiService.uploadImage(multipartBody)
                     showToast(successResponse.status.message)
                     sessionManager.savePredictionImage(successResponse.data.imagePath)
-//                    showToast(successResponse.data.imagePath)
                     showLoading(false)
 
-                    isFinishUpload = true
+//                    isFinishUpload = true
+
+//                    if (isFinishUpload){
+//                        bottomPopup.show(parentFragmentManager, "tes")
+                        predictImage()
+//                        isFinishUpload = false
+
+//                    }
+
+
                 }
                 catch (e:Exception) {
                     val errorBody = e.message.toString()
@@ -210,13 +222,13 @@ class CameraFragment : Fragment() {
                 call: Call<PredictionResponse>,
                 response: Response<PredictionResponse>
             ) {
-                showToast(response.body()?.data?.prediction!![0].nama)
                 val foodName = response.body()?.data?.prediction!![0].nama
-                val bundle = Bundle()
-                bundle.putString("food_name", foodName)
-                val newFragment = BottomPopup()
-                newFragment.arguments = bundle
+                val foodAmount = response.body()?.data?.prediction!![0].jumlah
 
+                sessionManager.saveFoodName(foodName)
+                sessionManager.saveFoodAmount(foodAmount)
+
+                bottomPopup.show(parentFragmentManager, "tes")
 
             }
 

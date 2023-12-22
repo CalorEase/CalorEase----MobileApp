@@ -22,6 +22,28 @@
         android:theme="@style/Theme.CalorEase"
         tools:targetApi="31">
         <activity
+            android:name=".ui.SplashActivity"
+            android:exported="true" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+        <activity
+            android:name=".ui.dinner.DinnerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.lunch.LunchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.breakfast.BreakfastActivity"
+            android:exported="false"
+            android:label="@string/title_activity_breakfast"
+            android:theme="@style/Theme.CalorEase" />
+        <activity
             android:name=".presentation.bottom_menu.PredictionActivity"
             android:exported="false" />
         <activity
@@ -32,11 +54,7 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.CalorEase">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.HomepageActivity"

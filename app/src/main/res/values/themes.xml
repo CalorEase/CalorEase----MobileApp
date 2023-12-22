@@ -2,4 +2,9 @@
 <resources>
 
     <style name="Theme.CalorEase" parent="Theme.Material3.Light.NoActionBar" />
+    <!-- Base application theme. -->
+    <style name="Base.Theme.CalorEase" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+         <item name="colorPrimary">@color/hijau_btn</item>
+    </style>
 </resources>

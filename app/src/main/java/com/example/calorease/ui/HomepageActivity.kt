@@ -31,8 +31,6 @@ class HomepageActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var bottomNavBar: BottomNavigationView
 
-    private var currentImageUri: Uri? = null
-
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -90,9 +88,6 @@ class HomepageActivity : AppCompatActivity() {
                 R.id.camera -> {
                     setFragment(CameraFragment())
                     true
-//                    val intent = Intent(this@HomepageActivity, AddImageActivty::class.java)
-//                    startActivity(intent)
-//                    true
                 }
                 R.id.profile -> {
                     setFragment(ProfileFragment())

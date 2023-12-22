@@ -3,6 +3,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id ("com.google.gms.google-services")
+
+    id("kotlin-android")
+    id("com.google.devtools.ksp")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -38,18 +42,24 @@ android {
             jvmTarget = "17"
         }
         buildFeatures {
-            compose = true
+//            compose = true
             viewBinding = true
             buildConfig = true
         }
-        composeOptions {
-            kotlinCompilerExtensionVersion = "1.4.3"
-        }
+//        composeOptions {
+//            kotlinCompilerExtensionVersion = "1.4.3"
+//        }
         packaging {
             resources {
                 excludes += "/META-INF/{AL2.0,LGPL2.1}"
             }
         }
+    }
+    buildFeatures {
+        viewBinding = true
+    }
+    kotlinOptions {
+        jvmTarget = "17"
     }
 
     dependencies {
@@ -71,6 +81,7 @@ android {
         debugImplementation("androidx.compose.ui:ui-test-manifest")
 
         implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+        implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
         implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
         implementation("androidx.navigation:navigation-compose:2.7.5")
         implementation("io.coil-kt:coil-compose:2.2.2")
@@ -81,6 +92,9 @@ android {
         implementation("com.google.dagger:hilt-android:2.45")
 
         implementation("com.github.bumptech.glide:glide:4.16.0")
+
+        implementation("androidx.room:room-runtime:2.5.2")
+        ksp("androidx.room:room-compiler:2.5.2")
 
         //cameraX
         val cameraxVersion = "1.3.0"
@@ -95,10 +109,18 @@ android {
         implementation ("com.squareup.retrofit2:retrofit:2.9.0")
         implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
         implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
+        //expand tv
+        implementation("at.blogc:expandabletextview:1.0.5")
+
+        //carousel
+        implementation("com.synnapps:carouselview:0.1.5")
     }
 }
 dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
 }

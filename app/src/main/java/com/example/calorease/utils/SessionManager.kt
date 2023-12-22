@@ -20,7 +20,30 @@ class SessionManager(context: Context) {
         return prefs.getString(IMAGE_PATH, null)
     }
 
+
+    //simpan dan get nama makanan
+    fun saveFoodName(foodName:String){
+        val editor = prefs.edit()
+        editor.putString(FOOD_NAME, foodName)
+        editor.apply()
+    }
+    fun fetchFoodName(): String?{
+        return prefs.getString(FOOD_NAME, null)
+    }
+
+    //simpan dan get jumlah makanan
+    fun saveFoodAmount(foodName:String){
+        val editor = prefs.edit()
+        editor.putString(FOOD_AMOUNT, foodName)
+        editor.apply()
+    }
+    fun fetchFoodAmount(): String?{
+        return prefs.getString(FOOD_AMOUNT, null)
+    }
+
     companion object {
         const val IMAGE_PATH = "image_path"
+        const val FOOD_NAME = "food_name"
+        const val FOOD_AMOUNT = "food_amount"
     }
 }

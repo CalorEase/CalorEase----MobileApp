@@ -20,7 +20,7 @@ class ApiConfig {
                 .build()
 
             val retrofit = Retrofit.Builder()
-                .baseUrl("https://calorease-api-yhh4c4a5sq-et.a.run.app/")
+                .baseUrl("https://colorease-api-2-yhh4c4a5sq-uc.a.run.app/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()

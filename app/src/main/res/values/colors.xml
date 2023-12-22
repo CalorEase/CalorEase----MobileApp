@@ -9,4 +9,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#459DE4</color>
     <color name="red">#FF0000</color>
+
+    <color name="hijau_btn">#A2D5A4</color>
+    <color name="hijau_bg">#108F15</color>
+    <color name="hijau">#1E9E23</color>
+    <color name="abu">#ACB5AC</color>
 </resources>

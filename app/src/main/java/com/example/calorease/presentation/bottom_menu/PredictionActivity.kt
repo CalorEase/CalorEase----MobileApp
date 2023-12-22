@@ -30,7 +30,6 @@ class PredictionActivity : AppCompatActivity() {
         currentImageUri = intent.getStringExtra("currentImageUri")!!
         currentImageUri?.let {
             Log.d("Image URI", "showImage: $it")
-//            binding.previewImageView.setImageURI(Uri.parse(it))
         }
     }
 

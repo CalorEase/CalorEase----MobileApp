@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 class ApiConfig2 {
     companion object{
-        fun getApiService(): ApiService {
+        fun getApiService(): ApiService2 {
             val loggingInterceptor =
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
@@ -20,12 +20,12 @@ class ApiConfig2 {
                 .build()
 
             val retrofit = Retrofit.Builder()
-                .baseUrl("https://calorease-api-yhh4c4a5sq-et.a.run.app/")
+                .baseUrl("https://us-central1-calorease-c3cd0.cloudfunctions.net/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()
 
-            return retrofit.create(ApiService::class.java)
+            return retrofit.create(ApiService2::class.java)
         }
     }
 }
